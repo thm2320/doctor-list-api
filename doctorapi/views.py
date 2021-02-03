@@ -1,4 +1,4 @@
-from doctorapi.models import Doctor
+from doctorapi.models import Doctor,District
 from doctorapi.serializers import DoctorSerializer
 from django.http import Http404
 from rest_framework.views import APIView
@@ -9,13 +9,16 @@ class DoctorList(APIView):
   def get(self, request, format=None):
     language = self.request.query_params.get('language', None)
     category = self.request.query_params.getlist('category', None)
+    district = self.request.query_params.getlist('district', None)
 
     doctors = Doctor.objects.all()
-    if language is not None:
+    if language:
       doctors = doctors.filter(languages__label=language)
-    if category is not None:       
+    if category:
       doctors = doctors.filter(categories__label__in=category).distinct()
-    
+    if district:
+      distEntries = District.objects.filter(label__in=district)
+      doctors = doctors.filter(locations__district__in=distEntries).distinct()
     serializer = DoctorSerializer(doctors, many=True)    
     return Response(serializer.data)
 
