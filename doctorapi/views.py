@@ -8,10 +8,13 @@ from rest_framework import status
 class DoctorList(APIView):
   def get(self, request, format=None):
     language = self.request.query_params.get('language', None)
+    category = self.request.query_params.getlist('category', None)
 
     doctors = Doctor.objects.all()
     if language is not None:
       doctors = doctors.filter(languages__label=language)
+    if category is not None:       
+      doctors = doctors.filter(categories__label__in=category).distinct()
     
     serializer = DoctorSerializer(doctors, many=True)    
     return Response(serializer.data)
