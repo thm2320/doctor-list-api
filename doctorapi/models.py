@@ -1,4 +1,5 @@
 from django.db import models
+import uuid
 
 # Create your models here.
 class Language(models.Model):
@@ -14,6 +15,7 @@ class Category(models.Model):
     return self.label
 
 class District(models.Model):
+  string_id = models.CharField(max_length=60, unique=True, default=uuid.uuid4)
   label = models.CharField(max_length=60)
   
   def __str__(self):
