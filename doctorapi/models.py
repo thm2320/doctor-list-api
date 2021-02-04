@@ -39,3 +39,20 @@ class Doctor(models.Model):
   def __str__(self):
     return self.name
 
+class OperationSchedule(models.Model):
+  days = models.CharField(max_length=255) # eg. "Monday, Wednesday"
+  times = models.CharField(max_length=255) # eg. "9am to 12nn, 3pm to 6pm" 
+
+  def __str__(self):
+    return self.days + ': ' + self.times
+
+class Service(models.Model):
+  doctor = models.ForeignKey(Doctor, null=True, on_delete=models.PROTECT)
+  label = models.CharField(max_length=60)
+  price = models.DecimalField(max_digits=19, decimal_places=2)
+  priceDetails = models.TextField(null=True)
+  operation_schedules = models.ManyToManyField(OperationSchedule)
+
+  def __str__(self):
+    return self.label 
+

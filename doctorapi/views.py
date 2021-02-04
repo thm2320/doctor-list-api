@@ -10,7 +10,8 @@ class DoctorList(APIView):
     language = self.request.query_params.get('language', None)
     category = self.request.query_params.getlist('category', None)
     district = self.request.query_params.getlist('district', None)
-
+    price_range = self.request.query_params.get('price_range', None)
+    
     doctors = Doctor.objects.all()
     if language:
       doctors = doctors.filter(languages__label=language)
@@ -19,6 +20,10 @@ class DoctorList(APIView):
     if district:
       distEntries = District.objects.filter(label__in=district)
       doctors = doctors.filter(locations__district__in=distEntries).distinct()
+    if price_range:
+      min_price,max_price = price_range.split(',')
+      doctors = doctors.filter(service__price__range=(min_price,max_price))
+
     serializer = DoctorSerializer(doctors, many=True)    
     return Response(serializer.data)
 
