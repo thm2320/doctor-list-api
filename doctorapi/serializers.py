@@ -15,7 +15,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class DistrictSerializer(serializers.ModelSerializer):
   class Meta:
     model = District
-    fields = ['id', 'label']
+    fields = ['string_id', 'label']
 
 class LocationSerializer(serializers.ModelSerializer):
   district = DistrictSerializer()

@@ -18,7 +18,7 @@ class DoctorList(APIView):
     if category:
       doctors = doctors.filter(categories__label__in=category).distinct()
     if district:
-      distEntries = District.objects.filter(label__in=district)
+      distEntries = District.objects.filter(string_id__in=district)
       doctors = doctors.filter(locations__district__in=distEntries).distinct()
     if price_range:
       min_price,max_price = price_range.split(',')
