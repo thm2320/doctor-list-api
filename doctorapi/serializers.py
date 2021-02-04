@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from .models import Doctor, Language, Category, Location, District, Service, OperationSchedule
 
-class LangungeSerializer(serializers.ModelSerializer):
+class LanguageSerializer(serializers.ModelSerializer):
   class Meta:
     model = Language
     fields = ['id', 'label']
@@ -38,7 +38,7 @@ class ServiceSerializer(serializers.ModelSerializer):
     fields = ['id', 'label', 'price', 'priceDetails', 'operation_schedules']
 
 class DoctorSerializer(serializers.ModelSerializer):
-  languages = LangungeSerializer(many=True)
+  languages = LanguageSerializer(many=True)
   categories = CategorySerializer(many=True)
   locations = LocationSerializer(many=True)
   service_set = ServiceSerializer(many=True)
