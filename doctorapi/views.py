@@ -24,13 +24,13 @@ class DoctorList(APIView):
       doctors = doctors.filter(
         service__category__in=catEntries,
         service__price__range=(min_price,max_price)
-      )
+      ).distinct()
     elif category:
       catEntries = Category.objects.filter(label__in=category)
-      doctors = doctors.filter(service__category__in=catEntries)
+      doctors = doctors.filter(service__category__in=catEntries).distinct()
     elif price_range:
       min_price,max_price = price_range.split(',')
-      doctors = doctors.filter(service__price__range=(min_price,max_price))
+      doctors = doctors.filter(service__price__range=(min_price,max_price)).distinct()
 
     serializer = DoctorSerializer(doctors, many=True)    
     return Response(serializer.data)
