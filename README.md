@@ -6,15 +6,15 @@
 
 # Create virtual environment and install libraries for the project
 
-1. run cmd `py -m venv env` to create a virtual environment
+1. run cmd `"py -m venv env"` to create a virtual environment
 1. activate the virtual environment just created
-1. run cmd `pip install -r requirements.txt` to install the libraries
+1. run cmd `"pip install -r requirements.txt"` to install the libraries
 
 # To run local server
 
-1. run cmd `py manage.py migrate` to initize the database for the project
-1. run cmd `py manage.py createsuperuser` and follow instruction to create super user
-1. run cmd `py manage.py runserver` to start up the local server
+1. run cmd `"py manage.py migrate"` to initize the database for the project
+1. run cmd `"py manage.py createsuperuser"` and follow instruction to create super user
+1. run cmd `"py manage.py runserver"` to start up the local server
 1. open broswer and go to http://127.0.0.1:8000/admin/
 1. login as super user and craete the doctor data
 1. go to http://127.0.0.1:8000/doctor/ , should get a list of doctor. 
@@ -23,4 +23,4 @@
 
 # To run unittest for views and serializers
 
-1. run cmd `py manage.py test`
+1. run cmd `"py manage.py test"`
