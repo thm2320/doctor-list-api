@@ -19,22 +19,42 @@ class LangugeSerializerTestCase(TestCase):
     test_data = serializer.data
     self.assertEqual(test_data, self.expected_data)
 
-class CategorySerializerTestCase(TestCase):
+class CategoryAndServiceSerializerTestCase(TestCase):
   def setUp(self):
     test_category = Category.objects.create(
       label="Cat 1"
     )
-    self.expected_data = { 
+    test_service = Service.objects.create(
+      category=test_category,
+      label="Service 1",
+      price=150,
+      priceDetails="Medicine included"
+    )
+    self.expected_category_data = { 
       'id': 1,
       'label': "Cat 1" 
     }  
+    self.expected_service_data = { 
+      'id': 1,
+      'label': "Service 1",
+      'price': "150.00",
+      'priceDetails': "Medicine included",
+      'category':self.expected_category_data,
+      'operation_schedules':[]
+    }  
     
     self.test_category=test_category
+    self.test_service=test_service
 
   def test_category_data(self):
     serializer = CategorySerializer(instance=self.test_category)    
     test_data = serializer.data
-    self.assertEqual(test_data, self.expected_data)
+    self.assertEqual(test_data, self.expected_category_data)
+  
+  def test_service_data(self):
+    serializer = ServiceSerializer(instance=self.test_service)    
+    test_data = serializer.data
+    self.assertEqual(test_data, self.expected_service_data)
 
 class DistrictAndLocationSerializerTestCase(TestCase):
   def setUp(self):
@@ -88,14 +108,7 @@ class DoctorSerializerTestCase(TestCase):
     test_doctor.languages.add(test_lang)
     test_doctor.save()
 
-    test_category1 = Category.objects.create(
-      label="cat1"
-    )
-    test_category2 = Category.objects.create(
-      label="cat2"
-    )
-    test_doctor.categories.add(test_category1,test_category2)
-    test_doctor.save()
+    
 
     test_district = District.objects.create(
       string_id="sha-tin",
@@ -113,7 +126,15 @@ class DoctorSerializerTestCase(TestCase):
     test_doctor.locations.add(test_location)
     test_doctor.save()    
 
+    test_category1 = Category.objects.create(
+      label="cat1"
+    )
+    test_category2 = Category.objects.create(
+      label="cat2"
+    )
+    test_doctor.save()
     test_service = Service.objects.create(
+      category=test_category1,
       doctor=test_doctor,
       label="Service 1",
       price=199,
@@ -155,13 +176,7 @@ class DoctorSerializerTestCase(TestCase):
     serializer = DoctorSerializer(instance=self.test_doctor)
     test_data = serializer.data
     self.assertEqual(len(test_data['languages']), len(self.expected_data['languages']))
-    self.assertEqual(test_data['languages'][0]['label'], self.expected_data['languages'][0]['label'])
-
-  def test_doctor_categories_relation(self):
-    serializer = DoctorSerializer(instance=self.test_doctor)
-    test_data = serializer.data
-    self.assertEqual(len(test_data['categories']), len(self.expected_data['categories']))
-    self.assertEqual(test_data['categories'][0]['label'], self.expected_data['categories'][0]['label'])  
+    self.assertEqual(test_data['languages'][0]['label'], self.expected_data['languages'][0]['label'])  
   
   def test_doctor_locations_relation(self):
     serializer = DoctorSerializer(instance=self.test_doctor)
