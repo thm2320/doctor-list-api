@@ -35,7 +35,6 @@ class Doctor(models.Model):
   name = models.CharField(max_length=60)
   chi_name = models.CharField(max_length=60, null=True)
   languages = models.ManyToManyField(Language)
-  categories = models.ManyToManyField(Category)
   locations = models.ManyToManyField(Location)
     
   def __str__(self):
@@ -54,6 +53,7 @@ class Service(models.Model):
   price = models.DecimalField(max_digits=19, decimal_places=2)
   priceDetails = models.TextField(null=True)
   operation_schedules = models.ManyToManyField(OperationSchedule)
+  category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
 
   def __str__(self):
     return self.label 

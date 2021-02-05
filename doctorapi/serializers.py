@@ -32,17 +32,17 @@ class OperationScheduleSerializer(serializers.ModelSerializer):
 
 class ServiceSerializer(serializers.ModelSerializer):
   operation_schedules = OperationScheduleSerializer(many=True)
+  category = CategorySerializer()
   
   class Meta:
     model = Service
-    fields = ['id', 'label', 'price', 'priceDetails', 'operation_schedules']
+    fields = ['id', 'label', 'price', 'priceDetails', 'operation_schedules', 'category']
 
 class DoctorSerializer(serializers.ModelSerializer):
-  languages = LanguageSerializer(many=True)
-  categories = CategorySerializer(many=True)
+  languages = LanguageSerializer(many=True)  
   locations = LocationSerializer(many=True)
   service_set = ServiceSerializer(many=True)
 
   class Meta:
     model = Doctor
-    fields = ['id', 'doctor_id', 'name', 'chi_name', 'languages', 'categories', 'locations', 'service_set']
+    fields = ['id', 'doctor_id', 'name', 'chi_name', 'languages', 'locations', 'service_set']

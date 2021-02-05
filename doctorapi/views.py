@@ -1,4 +1,4 @@
-from doctorapi.models import Doctor,District
+from doctorapi.models import Doctor,District,Category,Service
 from doctorapi.serializers import DoctorSerializer
 from django.http import Http404
 from rest_framework.views import APIView
@@ -15,12 +15,20 @@ class DoctorList(APIView):
     doctors = Doctor.objects.all()
     if language:
       doctors = doctors.filter(languages__label=language)
-    if category:
-      doctors = doctors.filter(categories__label__in=category).distinct()
     if district:
       distEntries = District.objects.filter(string_id__in=district)
       doctors = doctors.filter(locations__district__in=distEntries).distinct()
-    if price_range:
+    if category and price_range:
+      catEntries = Category.objects.filter(label__in=category)
+      min_price,max_price = price_range.split(',')
+      doctors = doctors.filter(
+        service__category__in=catEntries,
+        service__price__range=(min_price,max_price)
+      )
+    elif category:
+      catEntries = Category.objects.filter(label__in=category)
+      doctors = doctors.filter(service__category__in=catEntries)
+    elif price_range:
       min_price,max_price = price_range.split(',')
       doctors = doctors.filter(service__price__range=(min_price,max_price))
 
